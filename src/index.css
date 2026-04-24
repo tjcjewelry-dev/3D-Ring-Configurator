@@ -1,0 +1,28 @@
+@import "tailwindcss";
+
+@theme {
+  /* Jewelry Brand Colors */
+  --color-lumina-gold: #D4AF37;
+  --color-lumina-rose: #E6C1B1;
+  --color-lumina-silver: #C0C0C0;
+  --color-lumina-platinum: #E5E4E2;
+  --color-lumina-cream: #F9F6F1;
+
+  /* Brand Fonts */
+  --font-serif: "Playfair Display", serif;
+  --font-sans: "Inter", sans-serif;
+}
+
+@layer base {
+  body {
+    @apply bg-white text-zinc-900;
+  }
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
