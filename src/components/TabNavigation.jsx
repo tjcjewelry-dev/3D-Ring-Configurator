@@ -1,10 +1,16 @@
-export default function TabNavigation({ activeTab, setActiveTab }) {
+import { options } from "../data/options";
+
+export default function TabNavigation({ activeTab, setActiveTab }) {  
   const tabs = [
     { id: 'Diamond', label: 'Diamond', icon: '💎' },
     { id: 'Band', label: 'Band', icon: '💍' },
     { id: 'Head', label: 'Head', icon: '⚒️' },
     // { id: 'Summary', label: 'Summary', icon: '📋' }
   ];
+
+  if(options.hasQuilt) {
+    tabs.push({ id: 'Quilt', label: 'Quilt', icon: '📋' });
+  }
 
   return (
     <div className="flex border-b">

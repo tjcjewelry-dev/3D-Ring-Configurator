@@ -8,10 +8,14 @@ function CanvasOverlay() {
         <div style={{
             position: "absolute",
             inset: 0,
-            zIndex: 10,         
-            pointerEvents: "none",
-            background: "#f8f8f8"
-        }} />
+            zIndex: 10,
+            pointerEvents: "all",
+            background: "#f8f8f8",
+            touchAction: "none"
+        }}
+            onWheel={(e) => e.stopPropagation()}
+            onTouchMove={(e) => e.stopPropagation()}
+        />
     );
 }
 

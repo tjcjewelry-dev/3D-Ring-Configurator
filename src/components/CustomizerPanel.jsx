@@ -1,7 +1,6 @@
-import { RotateCcw, ChevronDown } from 'lucide-react';
+import { RotateCcw } from 'lucide-react';
 import OptionSelector from './OptionSelector';
 import { options } from '../data/options';
-import { useSelections } from '../store/useSelections';
 import { ASSETS_BASE } from '../data/assets';
 
 const Section = ({ title, number, children, id, activeTab }) => (
@@ -70,6 +69,16 @@ export default function CustomizerPanel({ activeTab }) {
                     label="Select Metal"
                     options={options.headMetalColors}
                     inpName="headMetal"
+                    folderPath={ASSETS_BASE + "imgs/metals"}
+                    type="swatch"
+                />
+            </Section>
+
+            <Section title="Quilt Setting" number="4" id="Quilt" activeTab={activeTab}>
+                <OptionSelector
+                    label="Select Color"
+                    options={options.quiltColors}
+                    inpName="quiltMetal"
                     folderPath={ASSETS_BASE + "imgs/metals"}
                     type="swatch"
                 />

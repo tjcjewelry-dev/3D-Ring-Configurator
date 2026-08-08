@@ -3,9 +3,9 @@ import { ShoppingBag, Heart, Search } from 'lucide-react';
 export default function Navbar() {
   return (
     <nav className="h-16 border-b px-4 lg:px-12 flex items-center justify-between sticky top-0 bg-white z-50">
-      <div className="text-2xl font-serif tracking-[0.3em] uppercase">Lumina</div>
+      <div className="text-2xl font-serif tracking-[0.3em] uppercase">AJAFFE</div>
       
-      <div className="hidden lg:flex items-center space-x-8 text-sm font-medium text-zinc-600">
+      {/* <div className="hidden lg:flex items-center space-x-8 text-sm font-medium text-zinc-600">
         <a href="#" className="hover:text-black">Design</a>
         <a href="#" className="hover:text-black">Collections</a>
         <a href="#" className="hover:text-black">About Us</a>
@@ -18,7 +18,7 @@ export default function Navbar() {
           <ShoppingBag size={20} />
           <span className="absolute -top-1 -right-1 bg-black text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center">0</span>
         </button>
-      </div>
+      </div> */}
     </nav>
   );
 }
