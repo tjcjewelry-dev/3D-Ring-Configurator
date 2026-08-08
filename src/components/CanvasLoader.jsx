@@ -1,34 +1,40 @@
-import { Html } from "@react-three/drei";
+// import { Html } from "@react-three/drei";
 import { useSceneReady } from "../store/useSceneReady";
 
 function CanvasLoader() {
     const ready = useSceneReady((s) => s.ready);
-
-    // Once ready, render nothing — stays mounted but invisible,
-    // avoids the Html unmount flash
     if (ready) return null;
 
     return (
-        <Html
-            center
-            zIndexRange={[100, 0]}
+        <div
             style={{
-                width: "100vw",
-                height: "100vh",
+                position: "absolute",
+                inset: 0,
+                zIndex: 20,
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
                 background: "#f8f8f8",
-                pointerEvents: "none",
+                pointerEvents: "all",
+                touchAction: "none",
+                userSelect: "none",
             }}
+            // Swallow everything — nothing reaches OrbitControls beneath
+            onWheel={(e) => e.stopPropagation()}
+            onTouchMove={(e) => e.stopPropagation()}
+            onMouseDown={(e) => e.stopPropagation()}
+            onMouseMove={(e) => e.stopPropagation()}
+            onMouseUp={(e) => e.stopPropagation()}
+            onPointerDown={(e) => e.stopPropagation()}
+            onPointerMove={(e) => e.stopPropagation()}
+            onPointerUp={(e) => e.stopPropagation()}
         >
             <img
                 src="/logo.png"
                 alt="Loading"
                 style={{ width: 120, marginBottom: 24, opacity: 0.85 }}
             />
-            {/* Pulse ring spinner — no percentage needed */}
             <div style={{
                 width: 36,
                 height: 36,
@@ -38,7 +44,7 @@ function CanvasLoader() {
                 animation: "spin 0.9s linear infinite",
             }} />
             <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
-        </Html>
+        </div>
     );
 }
 

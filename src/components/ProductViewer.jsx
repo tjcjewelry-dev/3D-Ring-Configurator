@@ -1,10 +1,11 @@
-import { ArrowLeft, Maximize2, RotateCw } from 'lucide-react';
 import Scene from './Scene';
+import MatchingBandViewer from './MatchingBandViewer';
 
 export default function ProductViewer() {
   return (
     <div className="h-full flex flex-col relative">
       <Scene />
+      <MatchingBandViewer />
       {/* <div className="className absolute inset-0">
         <div className="flex justify-between items-center mb-4">
           <button className="flex items-center text-sm font-medium text-zinc-600">
