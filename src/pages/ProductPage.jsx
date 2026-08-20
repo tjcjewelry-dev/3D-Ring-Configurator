@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import ProductViewer from "../components/ProductViewer";
 import Navbar from "../components/Navbar";
 import TabNavigation from "../components/TabNavigation";
@@ -6,16 +6,84 @@ import LoadingGate from "../components/LoadingGate";
 import CustomizerPanel from "../components/CustomizerPanel";
 import { useNavigate, useParams } from "react-router-dom";
 import { useSelections } from "../store/useSelections";
+import { options } from "../data/options";
+import { BASE_PATH_START } from "../data/assets";
+
+const convToValue = param => param?.trim()?.toUpperCase();
 
 export default function ProductPage() {
-    const productCode = useParams()?.productCode?.trim();
+    const {
+        parentName:mainPath,
+        shankType,
+        shape,
+        carat,
+        headType,
+        headMetal,
+        shankMetal,
+        quiltMetal,
+        initialized,
+        updateStack
+    } = useSelections();
+
+    const {
+        parentName,
+        shank: shankParam,
+        head: headParam,
+        metal: metalParam
+    } = useParams();
+
     const navigate = useNavigate();
 
-    if(!productCode) navigate("/404");
+    const stack = useMemo(() => {
+        if (!parentName) navigate("/404")
+
+        const headDetails = headParam?.trim()?.split("-");
+        const metalDetails = metalParam?.trim()?.split("-");
+
+        return {
+            parentName,
+            shankType: convToValue(shankParam) ?? options.shankTypes[0].conv,
+            shape: convToValue(headDetails?.[0]) ?? options.shapes[0].conv,
+            carat: convToValue(headDetails?.[1]) ?? options.carats[0].conv,
+            headType: convToValue(headDetails?.[2]) ?? options.headTypes[0].conv,
+            headMetal: convToValue(metalDetails?.[0]) ?? options.headMetalColors[0].conv,
+            shankMetal: convToValue(metalDetails?.[1]) ?? options.shankMetalColors[0].conv,
+            quiltMetal: convToValue(metalDetails?.[2]) ?? options.quiltColors[0].conv
+        };
+    }, [parentName, shankParam, headParam, metalParam]);
+
+    // URL -> Zustand
+    useEffect(() => {
+
+        if (!stack) {
+            navigate("/404", { replace: true });
+            return;
+        }
+
+        updateStack(stack);
+
+    }, [stack, updateStack, navigate]);
+
+    // Zustand -> URL
+    useEffect(() => {
+        if(!initialized) return;
+
+        const headStr = `${shape}-${carat}-${headType}`;
+        const metalStr = `${headMetal}-${shankMetal}-${quiltMetal}`;
+
+        const newPath = `/product/${mainPath}/${shankType}/${headStr}/${metalStr}`;
+        const currentPath = window.location.pathname;
+        
+        if(currentPath !== BASE_PATH_START + newPath) {
+            navigate(newPath, { replace: true });
+        }
+    }, [initialized, shape, carat, headType, headMetal, shankMetal, quiltMetal, mainPath, shankType, navigate]);
 
     const [activeTab, setActiveTab] = useState('Diamond');
-    const setStyleNo = useSelections((state) => state.setStyleNo);
-    setStyleNo(productCode);
+
+    if (!stack || !initialized) {
+        return <div>Loading...</div>;
+    }
 
     return (
         <div className="min-h-screen flex flex-col font-sans">

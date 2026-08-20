@@ -2,6 +2,8 @@ import { RotateCcw } from 'lucide-react';
 import OptionSelector from './OptionSelector';
 import { options } from '../data/options';
 import { ASSETS_BASE } from '../data/assets';
+import { useSelections } from '../store/useSelections';
+import { useMemo } from 'react';
 
 const Section = ({ title, number, children, id, activeTab }) => (
     <div className={`mb-8 ${activeTab !== id && activeTab !== 'Summary' ? 'hidden lg:block' : ''}`}>
@@ -16,6 +18,15 @@ const Section = ({ title, number, children, id, activeTab }) => (
 );
 
 export default function CustomizerPanel({ activeTab }) {
+    const shape = useSelections(state => state.shape);
+
+    const caratOptions = useMemo(() => {
+        const excludes = options?.excludes?.[`shape-${shape}`]?.carats;
+        if(!excludes || excludes?.length === 0) return options.carats;
+
+        return options.carats.filter((opt) => !excludes.includes(opt.conv));
+    }, [shape, options]);
+
     return (
         <div>
             <div className="hidden lg:flex justify-between items-center mb-8">
@@ -26,7 +37,7 @@ export default function CustomizerPanel({ activeTab }) {
             <Section title="Center Diamond" number="1" id="Diamond" activeTab={activeTab}>
                 <OptionSelector
                     label="Select Carat Size"
-                    options={options.carats}
+                    options={caratOptions}
                     inpName={"carat"}
                     type="pill"
                 />

@@ -33,9 +33,9 @@ function DiamondMeshes({ diamonds, envMap, quality }) {
         <mesh
             key={d.id}
             geometry={d.geometry}
-            position={d.pos}
-            quaternion={d.quat}
-            scale={d.sca}
+            position={d.position}
+            quaternion={d.quaternion}
+            scale={d.scale}
             castShadow
             receiveShadow
         >
@@ -45,10 +45,10 @@ function DiamondMeshes({ diamonds, envMap, quality }) {
                 ior={2.42}
                 aberrationStrength={0.03}
                 fresnel={1.8}
-                bounces={quality.diamondBounces}
-                resolution={quality.diamondResolution}
-                samples={quality.diamondSamples}
-                fastChroma
+                bounces={quality.diamondBounces}        // 11 → 2–3
+                resolution={quality.diamondResolution}  // 2048 → 128–256
+                samples={quality.diamondSamples}        // 8 → 1–2
+                fastChroma={true}                              // was false — enable for perf
                 toneMapped={false}
                 transparent
                 opacity={0.9}
@@ -60,8 +60,8 @@ function DiamondMeshes({ diamonds, envMap, quality }) {
 }
 
 function RingModel({ envMap, quality }) {
-    const styleNo = useSelections((s) => s.styleNo);
-    if(!styleNo) return;
+    const parentName = useSelections((s) => s.parentName);
+    if (!parentName) return;
 
     const setReady = useSceneReady((state) => state.setReady);
     const markLoaded = useSceneReady((s) => s.markLoaded);
@@ -74,10 +74,9 @@ function RingModel({ envMap, quality }) {
     const viewMatchingBand = useSelections((s) => s.viewMatchingBand);
     const { carat, shape, headType } = useSelections((s) => s);
 
-
-    const shankModel = useGLTF(`/new-models/${styleNo}/TR-${shankType}.glb`);
-    const headModel = useGLTF(`/new-models/${styleNo}/${headType}-${shape}-${carat}.glb`);
-    const bandModel = useGLTF(`/new-models/${styleNo}/BAND-${shankType}.glb`);
+    const shankModel = useGLTF(`/final-models/${parentName}/shank/SK-${shankType}.glb`);
+    const headModel = useGLTF(`/final-models/${parentName}/head/${headType}-${shape}-${carat}.glb`);
+    const bandModel = useGLTF(`/final-models/${parentName}/band/BAND-${shankType}.glb`);
 
     const metalEnv = useEnvironment({ files: `${ASSETS_BASE}hdri/metal_01.hdr` });
 
@@ -158,7 +157,7 @@ function RingModel({ envMap, quality }) {
             return;
         }
 
-        if(child.material) {
+        if (child.material) {
             child.material.name = materialSlotName;
             child.castShadow = true;
             child.receiveShadow = true;
@@ -181,7 +180,7 @@ function RingModel({ envMap, quality }) {
             markLoaded(`band-${shankType}`);
         }
 
-        markLoaded(`shank-TR-${shankType}`);
+        markLoaded(`shank-SK-${shankType}`);
         markLoaded(`head-${headType}-${shape}-${carat}`);
 
 
@@ -205,63 +204,8 @@ function RingModel({ envMap, quality }) {
         <primitive object={headModel.scene} />
         {viewMatchingBand && <primitive object={bandModel.scene} />}
 
-        {diamondMeshes.map((d) => (
-            <mesh
-                key={d.id}
-                geometry={d.geometry}
-                position={d.position}
-                quaternion={d.quaternion}
-                scale={d.scale}
-                castShadow
-                receiveShadow
-            >
-                <MeshRefractionMaterial
-                    envMap={envMap}
-                    color="#ffffff"
-                    ior={2.42}
-                    aberrationStrength={0.03}
-                    fresnel={1.8}
-                    bounces={quality.diamondBounces}        // 11 → 2–3
-                    resolution={quality.diamondResolution}  // 2048 → 128–256
-                    samples={quality.diamondSamples}        // 8 → 1–2
-                    fastChroma={true}                              // was false — enable for perf
-                    toneMapped={false}
-                    transparent
-                    opacity={0.9}
-                    side={2}
-                    reflectivity={0.3}
-                />
-            </mesh>
-        ))}
-
-        {viewMatchingBand && bandDiamondMeshes.map((d) => (
-            <mesh
-                key={d.id}
-                geometry={d.geometry}
-                position={d.position}
-                quaternion={d.quaternion}
-                scale={d.scale}
-                castShadow
-                receiveShadow
-            >
-                <MeshRefractionMaterial
-                    envMap={envMap}
-                    color="#ffffff"
-                    ior={2.42}
-                    aberrationStrength={0.03}
-                    fresnel={1.8}
-                    bounces={quality.diamondBounces}        // 11 → 2–3
-                    resolution={quality.diamondResolution}  // 2048 → 128–256
-                    samples={quality.diamondSamples}        // 8 → 1–2
-                    fastChroma={true}                              // was false — enable for perf
-                    toneMapped={false}
-                    transparent
-                    opacity={0.9}
-                    side={2}
-                    reflectivity={0.3}
-                />
-            </mesh>
-        ))}
+        <DiamondMeshes diamonds={diamondMeshes} envMap={envMap} quality={quality} />
+        <DiamondMeshes diamonds={bandDiamondMeshes} envMap={envMap} quality={quality} />
     </>;
 }
 
