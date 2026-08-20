@@ -30,11 +30,11 @@ function CanvasLoader() {
             onPointerMove={(e) => e.stopPropagation()}
             onPointerUp={(e) => e.stopPropagation()}
         >
-            <img
+            {/* <img
                 src="/logo.png"
                 alt="Loading"
                 style={{ width: 120, marginBottom: 24, opacity: 0.85 }}
-            />
+            /> */}
             <div style={{
                 width: 36,
                 height: 36,

@@ -8,10 +8,12 @@ export const options = {
     ],
     shapes: [
         { name: "Round", conv: "R", img: "/round.svg" },
-        // { name: "Oval", conv: "O", img: "/oval.svg" },
-        // { name: "Emerald", conv: "E", img: "/emerald.svg" },
-        // { name: "Pear", conv: "P", img: "/pear.svg" },
-        // { name: "Marquise", conv: "M", img: "/marquise.svg" },
+        { name: "Oval", conv: "O", img: "/oval.svg" },
+        { name: "Emerald", conv: "E", img: "/emerald.svg" },
+        { name: "Radiant", conv: "RD", img: "/emerald.svg" },
+        { name: "Cushion", conv: "C", img: "/oval.svg" },
+        { name: "Pear", conv: "P", img: "/pear.svg" },
+        { name: "Marquise", conv: "M", img: "/marquise.svg" },
         // { name: "Princess", conv: "PR", img: "/princess.svg" }
     ],
     shankTypes: [
@@ -30,7 +32,7 @@ export const options = {
     ],
     headTypes: [
         { name: "4 Prongs", conv: "4P", img: "/4-prongs.svg" },
-        // { name: "Diamond Bridge", conv: "DB", img: "/diamond-bridge.svg" },
+        { name: "Diamond Bridge", conv: "DB", img: "/diamond-bridge.svg" },
         // { name: "Diamond Prong", conv: "DP", img: "/diamond-prong.svg" },
         // { name: "Full Diamond Head", conv: "DH", img: "/full-diamond-head.svg" },
     ],
@@ -44,5 +46,9 @@ export const options = {
         { name: "White Gold", conv: "W", img: "/white-gold.webp" },
         { name: "Yellow Gold", conv: "Y", img: "/yellow-gold.webp" },
         { name: "Rose Gold", conv: "R", img: "/rose-gold.webp" }
-    ]
+    ],
+
+    excludes: {
+        "shape-C": { carats: [ '2_5' ] }
+    }
 }

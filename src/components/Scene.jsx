@@ -15,10 +15,10 @@ const IS_MOBILE =
     window.innerWidth < 768;
 
 const QUALITY = {
-    diamondBounces:    4,
+    diamondBounces:    3,
     diamondResolution: IS_MOBILE ? 128 : 512,
     diamondSamples:    IS_MOBILE ? 1 : 4,
-    envResolution:     IS_MOBILE ? 128 : 256,
+    envResolution:     IS_MOBILE ? 512 : 1024,
     shadowMapSize:     IS_MOBILE ? 512 : 1024,
     dpr:               IS_MOBILE ? [1, 1] : [1, 2],
 };
