@@ -11,12 +11,18 @@ import { BASE_PATH_START } from "../data/assets";
 
 const convToValue = param => param?.trim()?.toUpperCase();
 
+function getMetalColor(metalType, body, paramValue) {
+    const metalColorOptions = options['metalTypes'][metalType][body];
+    return metalColorOptions?.find(color => color.conv == paramValue)?.conv ?? metalColorOptions[0].conv;
+}
+
 export default function ProductPage() {
     const {
         parentName:mainPath,
         shankType,
         shape,
         carat,
+        metalType,
         headType,
         headMetal,
         shankMetal,
@@ -40,15 +46,22 @@ export default function ProductPage() {
         const headDetails = headParam?.trim()?.split("-");
         const metalDetails = metalParam?.trim()?.split("-");
 
+        const metalType = convToValue(metalDetails?.[0]) || Object.keys(options["metalTypes"])[0];
+        const shape = convToValue(headDetails?.[0]) ?? options.shapes[0].conv;
+        let carat = convToValue(headDetails?.[1]) ?? options.carats[0].conv;
+
+        carat = (carat === '2_5' && shape === 'C') ? options.carats[0].conv : carat;
+
         return {
             parentName,
             shankType: convToValue(shankParam) ?? options.shankTypes[0].conv,
-            shape: convToValue(headDetails?.[0]) ?? options.shapes[0].conv,
-            carat: convToValue(headDetails?.[1]) ?? options.carats[0].conv,
+            shape,
+            carat,
             headType: convToValue(headDetails?.[2]) ?? options.headTypes[0].conv,
-            headMetal: convToValue(metalDetails?.[0]) ?? options.headMetalColors[0].conv,
-            shankMetal: convToValue(metalDetails?.[1]) ?? options.shankMetalColors[0].conv,
-            quiltMetal: convToValue(metalDetails?.[2]) ?? options.quiltColors[0].conv
+            metalType: metalType,
+            headMetal: getMetalColor(metalType, "head", convToValue(metalDetails?.[1])),
+            shankMetal: getMetalColor(metalType, "shank", convToValue(metalDetails?.[2])),
+            quiltMetal: getMetalColor(metalType, "quilt", convToValue(metalDetails?.[3]))
         };
     }, [parentName, shankParam, headParam, metalParam]);
 
@@ -69,7 +82,7 @@ export default function ProductPage() {
         if(!initialized) return;
 
         const headStr = `${shape}-${carat}-${headType}`;
-        const metalStr = `${headMetal}-${shankMetal}-${quiltMetal}`;
+        const metalStr = `${metalType}-${headMetal}-${shankMetal}-${quiltMetal}`;
 
         const newPath = `/product/${mainPath}/${shankType}/${headStr}/${metalStr}`;
         const currentPath = window.location.pathname;
@@ -77,7 +90,7 @@ export default function ProductPage() {
         if(currentPath !== BASE_PATH_START + newPath) {
             navigate(newPath, { replace: true });
         }
-    }, [initialized, shape, carat, headType, headMetal, shankMetal, quiltMetal, mainPath, shankType, navigate]);
+    }, [initialized, shape, carat, metalType, headType, headMetal, shankMetal, quiltMetal, mainPath, shankType, navigate]);
 
     const [activeTab, setActiveTab] = useState('Diamond');
 
@@ -86,7 +99,7 @@ export default function ProductPage() {
     }
 
     return (
-        <div className="min-h-screen flex flex-col font-sans">
+        <div className="min-h-screen flex flex-col font-serif">
             <Navbar />
 
             <main className="flex-1 flex flex-col lg:flex-row relative">

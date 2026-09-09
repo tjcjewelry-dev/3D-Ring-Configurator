@@ -1,8 +1,6 @@
-import { ShoppingBag, Heart, Search } from 'lucide-react';
-
 export default function Navbar() {
   return (
-    <nav className="h-16 border-b px-4 lg:px-12 flex items-center justify-between sticky top-0 bg-white z-50">
+    <nav className="h-16 border-b px-4 lg:px-12 flex items-center justify-between bg-white z-50">
       <div className="text-2xl font-serif tracking-[0.3em] uppercase">AJAFFE</div>
       
       {/* <div className="hidden lg:flex items-center space-x-8 text-sm font-medium text-zinc-600">

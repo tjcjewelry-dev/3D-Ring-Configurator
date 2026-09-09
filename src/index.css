@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
 
 @theme {
   /* Jewelry Brand Colors */
@@ -10,7 +11,6 @@
 
   /* Brand Fonts */
   --font-serif: "Playfair Display", serif;
-  --font-sans: "Inter", sans-serif;
 }
 
 @layer base {
@@ -25,4 +25,48 @@
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+/* utility */
+.text-black {
+  color: #333;
+}
+
+/* Engraving font styling */
+.arial-font-style {
+  font-family: Arial, Helvetica, sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+}
+
+.courier-font-style {
+  font-family: 'Courier New', Courier, monospace;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+}
+
+.great-vibes-font-style {
+  font-family: "Great Vibes", cursive;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 20px;
+}
+
+@media screen and (max-width: 375px) {
+  html {
+    min-width: 400px;
+    overflow-x: auto;
+  }
+}
+
+@media screen and (max-width: 450px) {
+  .arial-font-style {
+    font-size: 14px;
+  }
+  
+  .courier-font-style {
+    font-size: 11px;
+  }
 }

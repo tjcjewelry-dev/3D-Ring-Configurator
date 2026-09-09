@@ -6,12 +6,17 @@ export const useSelections = create((set, get) => ({
     parentName: null,
     carat: null,
     shape: null,
+    metalType: null,
     shankType: null,
     shankMetal: null,
     headType: null,
     headMetal: null,
     quiltMetal: null,
     viewMatchingBand: null,
+    ringSize: null,
+
+    engravingText: "",
+    engravingFont: "Arial",
     
     updateField: (key, value) => set({ [key] : value }),
     toggleMatchingBandView: () => set({ viewMatchingBand: !get().viewMatchingBand }),
