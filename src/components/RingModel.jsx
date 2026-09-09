@@ -3,7 +3,7 @@ import { useSelections } from "../store/useSelections";
 import { useCallback, useEffect, useMemo } from "react";
 import { createMetalMaterial } from "../materials/metal";
 import { colors } from "../data/colors";
-import { Matrix4, Quaternion, Vector3 } from "three";
+import { FrontSide, Matrix4, Quaternion, Vector3 } from "three";
 import { useSceneReady } from "../store/useSceneReady";
 import { ASSETS_BASE } from "../data/assets";
 
@@ -42,18 +42,16 @@ function DiamondMeshes({ diamonds, envMap, quality }) {
             <MeshRefractionMaterial
                 envMap={envMap}
                 color="#ffffff"
-                ior={2.42}
+                ior={2.417}
+                bounces={quality.diamondBounces}
+                fresnel={0.3}
                 aberrationStrength={0.03}
-                fresnel={1.8}
-                bounces={quality.diamondBounces}        // 11 → 2–3
-                resolution={quality.diamondResolution}  // 2048 → 128–256
-                samples={quality.diamondSamples}        // 8 → 1–2
-                fastChroma={true}                              // was false — enable for perf
+                fastChroma={true}
+                resolution={quality.diamondResolution}
+                samples={quality.diamondSamples}
                 toneMapped={false}
-                transparent
-                opacity={0.9}
-                side={2}
-                reflectivity={0.3}
+                transparent={false}
+                side={FrontSide}
             />
         </mesh>
     ));
@@ -74,9 +72,9 @@ function RingModel({ envMap, quality }) {
     const viewMatchingBand = useSelections((s) => s.viewMatchingBand);
     const { carat, shape, headType } = useSelections((s) => s);
 
-    const shankModel = useGLTF(`/final-models/${parentName}/shank/SK-${shankType}.glb`);
-    const headModel = useGLTF(`/final-models/${parentName}/head/${headType}-${shape}-${carat}.glb`);
-    const bandModel = useGLTF(`/final-models/${parentName}/band/BAND-${shankType}.glb`);
+    const shankModel = useGLTF(`/models/${parentName}/shank/SK-${shankType}.glb`);
+    const headModel = useGLTF(`/models/${parentName}/head/${headType}-${shape}-${carat}.glb`);
+    const bandModel = useGLTF(`/models/${parentName}/band/BAND-${shankType}.glb`);
 
     const metalEnv = useEnvironment({ files: `${ASSETS_BASE}hdri/metal_01.hdr` });
 
@@ -85,19 +83,11 @@ function RingModel({ envMap, quality }) {
         const colorCombination = colors[shankMetal];
         if (!colorCombination || colorCombination.length === 0) return null;
 
-        const metOutside = createMetalMaterial(metalEnv, colorCombination[0], {
-            roughness: 0.25,
-            metalness: 0.98,
-            envMapIntensity: 1.5,
-        });
+        const metOutside = createMetalMaterial(metalEnv, colorCombination[0]);
 
         const metInside = (colorCombination.length === 1)
             ? metOutside
-            : createMetalMaterial(metalEnv, colorCombination[1], {
-                roughness: 0.25,
-                metalness: 0.98,
-                envMapIntensity: 1.5,
-            });
+            : createMetalMaterial(metalEnv, colorCombination[1]);
         return { metOutside, metInside };
     }, [shankMetal, metalEnv]);
 
@@ -105,11 +95,7 @@ function RingModel({ envMap, quality }) {
         const colorCombination = colors[headMetal];
         if (!colorCombination || colorCombination.length == 0) return null;
 
-        const metal = createMetalMaterial(metalEnv, colorCombination[0], {
-            roughness: 0.25,
-            metalness: 0.98,
-            envMapIntensity: 1.5,
-        });
+        const metal = createMetalMaterial(metalEnv, colorCombination[0]);
 
         return metal;
     }, [headMetal, metalEnv]);
@@ -118,11 +104,7 @@ function RingModel({ envMap, quality }) {
         const colorCombination = colors[quiltMetal];
         if (!colorCombination || colorCombination.length == 0) return null;
 
-        const metal = createMetalMaterial(metalEnv, colorCombination[0], {
-            roughness: 0.25,
-            metalness: 0.98,
-            envMapIntensity: 1.5,
-        });
+        const metal = createMetalMaterial(metalEnv, colorCombination[0]);
 
         return metal;
     }, [quiltMetal, metalEnv]);

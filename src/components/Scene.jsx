@@ -9,27 +9,28 @@ import CanvasOverlay from "./CanvasOverlay";
 import SelectionWatcher from "./SelectionWatcher";
 import { useSceneReady } from "../store/useSceneReady";
 import { ASSETS_BASE } from "../data/assets";
+import { ACESFilmicToneMapping } from "three";
 
 const IS_MOBILE =
     /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent) ||
     window.innerWidth < 768;
 
 const QUALITY = {
-    diamondBounces:    3,
+    diamondBounces: 6,
     diamondResolution: IS_MOBILE ? 128 : 512,
-    diamondSamples:    IS_MOBILE ? 1 : 4,
-    envResolution:     IS_MOBILE ? 512 : 1024,
-    shadowMapSize:     IS_MOBILE ? 512 : 1024,
-    dpr:               IS_MOBILE ? [1, 1] : [1, 2],
+    diamondSamples: IS_MOBILE ? 1 : 4,
+    envResolution: IS_MOBILE ? 512 : 1024,
+    shadowMapSize: IS_MOBILE ? 512 : 1024,
+    dpr: IS_MOBILE ? [1, 1] : [1, 2],
 };
 
 function SceneContent() {
-    const ready      = useSceneReady((s) => s.ready);
+    const ready = useSceneReady((s) => s.ready);
     const controlsRef = useRef();
 
     const envMap = useEnvironment({
         files: `${ASSETS_BASE}hdri/vr-studio.hdr`,
-        resolution: QUALITY.envResolution,
+        resolution: QUALITY.envResolution
     });
 
     useEffect(() => {
@@ -38,17 +39,18 @@ function SceneContent() {
         // Reset any stuck drag state in OrbitControls
         const canvas = controlsRef.current.domElement;
         if (canvas) {
-            canvas.dispatchEvent(new PointerEvent("pointerup",   { bubbles: true }));
+            canvas.dispatchEvent(new PointerEvent("pointerup", { bubbles: true }));
             canvas.dispatchEvent(new PointerEvent("pointercancel", { bubbles: true }));
         }
     }, [ready]);
 
     return (
         <>
-            <ambientLight intensity={0.4} />
+            <ambientLight intensity={0.25} />
+
             <directionalLight
                 position={[-10, 12, 25]}
-                intensity={1.4}
+                intensity={0.8}
                 castShadow
                 shadow-mapSize-width={2048}
                 shadow-mapSize-height={2048}
@@ -95,13 +97,17 @@ function Scene() {
             <CanvasLoader />
 
             <Canvas
+                id="model-viewer-canvas"
                 camera={{ position: [0, 75.5, 0], fov: 50 }}
                 dpr={QUALITY.dpr}
-                performance={{ min: 0.5 }}
+                performance={{ min: 0.5, max: 1, debounce: 200 }}
                 gl={{
-                    antialias: false,
+                    antialias: true,
                     alpha: true,
                     powerPreference: "high-performance",
+
+                    toneMapping: ACESFilmicToneMapping,
+                    toneMappingExposure: 0.45
                 }}
                 style={{ touchAction: "none" }}
                 shadows
